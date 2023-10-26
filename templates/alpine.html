@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alpine 学习</title>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+</head>
+<body>
+
+
+<div x-data="{ count: 0 }">
+    <button @click="count++">+</button>
+    <span x-text="count"></span>
+    <button @click="count--">-</button>
+</div>
+
+<div x-data="{ open: false }">
+    <button @click="open = true">Open Dropdown</button>
+
+    <ul
+        x-show="open"
+        @click.away="open = false"
+    >
+        Dropdown Body
+    </ul>
+</div>
+
+<div x-data="{ tab: 'foo' }">
+    <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
+    <button :class="{ 'active': tab === 'bar' }" @click="tab = 'bar'">Bar</button>
+
+    <div x-show="tab === 'foo'">Tab Foo</div>
+    <div x-show="tab === 'bar'">Tab Bar</div>
+</div>
+
+
+<div x-data="dropdown()">
+    <button x-on:click="open">Open</button>
+
+    <div x-show="isOpen()" x-on:click.away="close">
+        // Dropdown
+    </div>
+</div>
+
+<script>
+    function dropdown() {
+        return {
+            show: false,
+            open() { this.show = true },
+            close() { this.show = false },
+            isOpen() { return this.show === true },
+        }
+    }
+</script>
+
+</body>
+</html>

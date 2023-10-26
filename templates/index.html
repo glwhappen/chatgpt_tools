@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChatGPT工具箱</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
+
+</head>
+<body>
+
+
+<div x-data="{}" x-init="renderMarkdown">
+ChatGPT聊天记录保存
+
+首先需要获取一个ID和Token，用于后续的聊天记录保存。
+
+id就是聊天内容的id，可以在ChatGPT中点击任意聊天记录，然后看url携带的id
+
+token可以复制这个网址 `https://chat.openai.com/api/auth/session` 到浏览器中查看，然后就可以看到accessToken 复制内容填入下方即可
+</div>
+
+<div x-data="formHandler()">
+    token:<input type="text" x-model="token" placeholder="Token"> <br>
+    id:<input type="text" x-model="id" placeholder="ID"> <br>
+
+    <button @click="generateURL">获取markdown文件</button>
+    <p x-text="msg"></p>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    function formHandler() {
+        return {
+            id: localStorage.getItem('id') || '',
+            token: localStorage.getItem('token') || '',
+            url: '',
+            msg: '',
+            generateURL() {
+                this.url = `/conversation?id=${this.id}&token=${this.token}`;
+                this.msg = "正在生成..."
+                localStorage.setItem('id', this.id);
+                localStorage.setItem('token', this.token);
+                // 网页跳转
+                window.location.href = this.url;
+            }
+        };
+    }
+
+    function renderMarkdown() {
+        marked.setOptions({
+            sanitize: false,
+        });
+        this.$el.innerHTML = marked.parse(this.$el.textContent || this.$el.innerText);
+    }
+</script>
+</body>
+</html>
